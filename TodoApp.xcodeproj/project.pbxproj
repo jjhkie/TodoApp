@@ -13,6 +13,10 @@
 		B902314A29DAF131006F5A8D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B902314829DAF131006F5A8D /* Main.storyboard */; };
 		B902314C29DAF131006F5A8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B902314B29DAF131006F5A8D /* Assets.xcassets */; };
 		B902314F29DAF131006F5A8D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B902314D29DAF131006F5A8D /* LaunchScreen.storyboard */; };
+		B902315829DAF775006F5A8D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = B902315729DAF775006F5A8D /* SnapKit */; };
+		B902315B29DAF7D7006F5A8D /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = B902315A29DAF7D7006F5A8D /* Then */; };
+		B902315E29DB037C006F5A8D /* ReusableKit in Frameworks */ = {isa = PBXBuildFile; productRef = B902315D29DB037C006F5A8D /* ReusableKit */; };
+		B902316029DB03A6006F5A8D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B902315F29DB03A6006F5A8D /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +28,7 @@
 		B902314B29DAF131006F5A8D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B902314E29DAF131006F5A8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B902315029DAF131006F5A8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B902315F29DB03A6006F5A8D /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +36,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B902315829DAF775006F5A8D /* SnapKit in Frameworks */,
+				B902315B29DAF7D7006F5A8D /* Then in Frameworks */,
+				B902315E29DB037C006F5A8D /* ReusableKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,6 +66,7 @@
 			children = (
 				B902314229DAF131006F5A8D /* AppDelegate.swift */,
 				B902314429DAF131006F5A8D /* SceneDelegate.swift */,
+				B902315F29DB03A6006F5A8D /* Constants.swift */,
 				B902314629DAF131006F5A8D /* ViewController.swift */,
 				B902314829DAF131006F5A8D /* Main.storyboard */,
 				B902314B29DAF131006F5A8D /* Assets.xcassets */,
@@ -83,6 +92,11 @@
 			dependencies = (
 			);
 			name = TodoApp;
+			packageProductDependencies = (
+				B902315729DAF775006F5A8D /* SnapKit */,
+				B902315A29DAF7D7006F5A8D /* Then */,
+				B902315D29DB037C006F5A8D /* ReusableKit */,
+			);
 			productName = TodoApp;
 			productReference = B902313F29DAF131006F5A8D /* TodoApp.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +125,11 @@
 				Base,
 			);
 			mainGroup = B902313629DAF131006F5A8D;
+			packageReferences = (
+				B902315629DAF775006F5A8D /* XCRemoteSwiftPackageReference "SnapKit" */,
+				B902315929DAF7D7006F5A8D /* XCRemoteSwiftPackageReference "Then" */,
+				B902315C29DB037C006F5A8D /* XCRemoteSwiftPackageReference "ReusableKit" */,
+			);
 			productRefGroup = B902314029DAF131006F5A8D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -141,6 +160,7 @@
 				B902314729DAF131006F5A8D /* ViewController.swift in Sources */,
 				B902314329DAF131006F5A8D /* AppDelegate.swift in Sources */,
 				B902314529DAF131006F5A8D /* SceneDelegate.swift in Sources */,
+				B902316029DB03A6006F5A8D /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,6 +378,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B902315629DAF775006F5A8D /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		B902315929DAF7D7006F5A8D /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		B902315C29DB037C006F5A8D /* XCRemoteSwiftPackageReference "ReusableKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/ReusableKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B902315729DAF775006F5A8D /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B902315629DAF775006F5A8D /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		B902315A29DAF7D7006F5A8D /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B902315929DAF7D7006F5A8D /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+		B902315D29DB037C006F5A8D /* ReusableKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B902315C29DB037C006F5A8D /* XCRemoteSwiftPackageReference "ReusableKit" */;
+			productName = ReusableKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B902313729DAF131006F5A8D /* Project object */;
 }
