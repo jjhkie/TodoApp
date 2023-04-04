@@ -10,6 +10,8 @@ import SnapKit
 import Then
 
 class ViewController: UIViewController {
+    
+    let defaults = UserDefaults.standard
 
     var itemArray = ["FInd Mike","Buy Eggs","Destory Demogorgon"]
     
@@ -20,6 +22,9 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let items = defaults.array(forKey: "TodoListArray") as? [String]{
+            itemArray = items
+        }
         BarCustom()
         tableView.dataSource = self
         tableView.delegate = self
@@ -46,8 +51,9 @@ extension ViewController{
         let alert = UIAlertController(title: "Add New ToDo Item", message: "",preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add Item", style: .default){action in
-            print("Success")
             self.itemArray.append(alertText.text!)
+            
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
             
             self.tableView.reloadData()
         }

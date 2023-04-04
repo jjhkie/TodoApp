@@ -12,13 +12,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 
+    //MARK: - 앱이 로드될 떄 호출되는 곳
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        //USerDefaults plist 파일 저장 위치 
+        print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
+        print(#function)
         return true
     }
 
     // MARK: UISceneSession Lifecycle
-
+//MARK: - 새로운 scene/window를 제공하려고 할 때 불리는 메소드
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
         // Use this method to select a configuration to create the new scene with.
