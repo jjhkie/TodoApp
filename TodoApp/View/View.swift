@@ -12,17 +12,20 @@ import Then
 class ViewController: UIViewController {
     
 
-    var itemArray = [TodoItem]()
+    var itemArray = [Item]()
     
     let tableView = UITableView().then{
         $0.register(Cell.tableViewCell)
     }
     
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appending(path: "Items.plist")
+    
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
 
         loadItems()
@@ -60,9 +63,10 @@ extension ViewController{
         
         let action = UIAlertAction(title: "Add Item", style: .default){action in
             
-            let newItem = TodoItem()
-            newItem.title = alertText.text ?? ""
-            
+           
+            let newItem = Item(context: self.context)
+            newItem.title = alertText.text
+            newItem.done = false
             self.itemArray.append(newItem)
             
            // self.defaults.set(self.itemArray, forKey: "TodoListArray")

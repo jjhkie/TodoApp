@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 
 //MARK: - TableViewDataSource
@@ -34,9 +35,12 @@ extension ViewController: UITableViewDataSource{
 //MARK: - TableView Delegate
 extension ViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(itemArray[indexPath.row])
+        
+        //데이터 제거
+        context.delete(itemArray[indexPath.row])
+        itemArray.remove(at: indexPath.row)
 
-        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        //itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
         saveItems()
 
@@ -47,26 +51,22 @@ extension ViewController: UITableViewDelegate{
 //MARK: - Save Items
 extension ViewController{
     func saveItems(){
-        let encoder = PropertyListEncoder()
-        
+       
         do{
-            let data = try encoder.encode(self.itemArray)
-            try data.write(to: self.dataFilePath!)
+            try context.save()
         }catch{
-            print("Error encoding item array, \(error)")
+            print("Error Saving Context, \(error)")
         }
         
         self.tableView.reloadData()
     }
     
     func loadItems(){
-        if let data = try? Data(contentsOf: dataFilePath!){
-            let decoder = PropertyListDecoder()
-            do{
-                itemArray = try decoder.decode([TodoItem].self, from: data)
-            }catch{
-                print("error")
-            }
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        do{
+            itemArray = try context.fetch(request)
+        }catch{
+            print("Error fetching data from context \(error)")
         }
     }
 }
