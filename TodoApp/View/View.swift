@@ -9,11 +9,13 @@ import UIKit
 import SnapKit
 import Then
 import CoreData
+import RealmSwift
 
 class ViewController: UIViewController {
     
 
-    var itemArray = [Item]()
+    var todoItems: Results<Item>?
+    let realm = try! Realm()
     
     var selectedCategory: Category?{
         didSet{
@@ -27,10 +29,6 @@ class ViewController: UIViewController {
     
     let searchBar = UISearchBar()
     
-    
-    
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //BarCustom()
@@ -39,11 +37,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         
         BarCustom()
-        searchBar.delegate = self
+        //searchBar.delegate = self
         tableView.dataSource = self
         tableView.delegate = self
         layout()
@@ -76,15 +73,19 @@ extension ViewController{
         let action = UIAlertAction(title: "Add Item", style: .default){action in
             
            
-            let newItem = Item(context: self.context)
-            newItem.title = alertText.text
-            newItem.done = false
-            newItem.parentCategory = self.selectedCategory
-            self.itemArray.append(newItem)
-            
-           // self.defaults.set(self.itemArray, forKey: "TodoListArray")
-            self.saveItems()
-            
+            if let currentCategory = self.selectedCategory{
+                do{
+                    try self.realm.write{
+                        let newItem = Item()
+                        newItem.title = alertText.text ?? ""
+                        newItem.dataCreated = Date()
+                        currentCategory.items.append(newItem)
+                    }
+                }catch{
+                    print("error, \(error)")
+                }
+            }
+            self.tableView.reloadData()
         }
         
 

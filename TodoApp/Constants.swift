@@ -7,15 +7,9 @@
 
 import ReusableKit
 import UIKit
-
-
-
-struct T{
-
-}
-
+import SwipeCellKit
 
 //MARK: - Cell
 struct Cell{
-    static let tableViewCell = ReusableCell<UITableViewCell>()
+    static let tableViewCell = ReusableCell<SwipeTableViewCell>()
 }

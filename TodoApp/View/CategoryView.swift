@@ -9,24 +9,28 @@ import UIKit
 import SnapKit
 import Then
 import CoreData
+import RealmSwift
+import SwipeCellKit
 
 class CategoryController: UIViewController{
     
-    var categoryItems = [Category]()
+    let realm = try! Realm()
+    
+    
+    var categoryItems: Results<Category>?
     
     let tableView = UITableView().then{
         $0.register(Cell.tableViewCell)
     }
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-    
+        
         self.loadItem()
         
-
+        
         tableView.delegate = self
         tableView.dataSource = self
         BarCustom()
@@ -36,6 +40,8 @@ class CategoryController: UIViewController{
 
 extension CategoryController{
     func layout(){
+        
+        tableView.rowHeight = 80.0
         view.backgroundColor = .white
         
         view.addSubview(tableView)
@@ -64,11 +70,11 @@ extension CategoryController{
         
         let action = UIAlertAction(title: "Add Category", style: .default){_ in
             
-            let newItem = Category(context: self.context)
-            newItem.name = text.text
-            self.categoryItems.append(newItem)
+            let newCategory = Category()
+            newCategory.name = text.text!
             
-            self.saveItem()
+            
+            self.save(category: newCategory)
         }
         
         alert.addAction(action)
@@ -82,10 +88,9 @@ extension CategoryController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let destinationVC = ViewController()
-        destinationVC.selectedCategory = categoryItems[indexPath.row]
+        destinationVC.selectedCategory = categoryItems![indexPath.row]
         
         navigationController?.pushViewController(destinationVC, animated: true)
-        //show(destinationVC, sender: true)
     }
     
     
@@ -94,24 +99,62 @@ extension CategoryController: UITableViewDelegate{
 //MARK: - TableView DataSource
 extension CategoryController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        categoryItems.count
+        categoryItems?.count ?? 1
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeue(Cell.tableViewCell) else {return UITableViewCell()}
-        
-        cell.textLabel?.text = categoryItems[indexPath.row].name
+        cell.delegate = self
+        cell.textLabel?.text = categoryItems?[indexPath.row].name ?? "No Categories"
         
         return cell
     }
 }
 
+//MARK: - SwipeCell Delegate
+extension CategoryController: SwipeTableViewCellDelegate{
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeCellKit.SwipeActionsOrientation) -> [SwipeCellKit.SwipeAction]? {
+        guard orientation == .right else { return nil }
+
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+            
+            if let categoryForDeletion = self.categoryItems?[indexPath.row]{
+                do{
+                    
+                    try self.realm.write{
+                        self.realm.delete(categoryForDeletion)
+                    }
+                }catch{
+                    print("Error, \(error)")
+                }
+                
+                //tableView.reloadData()
+            }
+           
+        }
+
+        // customize the action appearance
+        deleteAction.image = UIImage(named: "delete-icon")
+
+        return [deleteAction]
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        options.expansionStyle = .destructive
+
+        return options
+    }
+}
+
 
 extension CategoryController{
-    func saveItem(){
+    func save(category: Category){
         do{
-            try context.save()
+            try realm.write{
+                realm.add(category)
+            }
         }catch{
             print("Error")
         }
@@ -119,12 +162,8 @@ extension CategoryController{
     }
     
     func loadItem(){
-        let request: NSFetchRequest<Category> = Category.fetchRequest()
-        do{
-            categoryItems = try context.fetch(request)
-        }catch{
-            print("Error")
-        }
+        
+        self.categoryItems = realm.objects(Category.self)
         
         tableView.reloadData()
     }
