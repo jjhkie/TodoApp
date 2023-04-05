@@ -48,6 +48,33 @@ extension ViewController: UITableViewDelegate{
     }
 }
 
+//MARK: - SearchBar Delegate
+
+extension ViewController: UISearchBarDelegate{
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadItems(request: request,predicate: predicate)
+
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0{
+            loadItems()
+            
+            DispatchQueue.main.async {
+                //커서와 키보드 제거
+                searchBar.resignFirstResponder()
+            }
+
+        }
+    }
+}
+
 //MARK: - Save Items
 extension ViewController{
     func saveItems(){
@@ -61,13 +88,22 @@ extension ViewController{
         self.tableView.reloadData()
     }
     
-    func loadItems(){
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
+    func loadItems(request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil){
+        
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        
+        if let addtionalPredicate = predicate{
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, addtionalPredicate])
+        }else{
+            request.predicate = categoryPredicate
+        }
+        
         do{
             itemArray = try context.fetch(request)
         }catch{
             print("Error fetching data from context \(error)")
         }
+        tableView.reloadData()
     }
 }
 
