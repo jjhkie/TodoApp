@@ -11,7 +11,7 @@ import Then
 import CoreData
 import RealmSwift
 
-class ViewController: UIViewController {
+class ViewController: SwipeTableViewController {
     
 
     var todoItems: Results<Item>?
@@ -23,9 +23,6 @@ class ViewController: UIViewController {
         }
     }
     
-    let tableView = UITableView().then{
-        $0.register(Cell.tableViewCell)
-    }
     
     let searchBar = UISearchBar()
     
@@ -36,16 +33,39 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .black
+       
+        let myView = UIView()
+        myView.backgroundColor = .red
+        view.addSubview(searchBar)
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+
+        searchBar.snp.makeConstraints { make in
+            make.top.equalTo(tableView.snp.topMargin)
+            make.leading.trailing.equalToSuperview()
+            make.width.equalToSuperview().dividedBy(1)
+        }
         
+        view.layoutIfNeeded()
         
         BarCustom()
         //searchBar.delegate = self
         tableView.dataSource = self
         tableView.delegate = self
-        layout()
-    }
 
+    }
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let item = todoItems?[indexPath.row]{
+            do{
+               try realm.write{
+                    realm.delete(item)
+                }
+            }catch{
+                print("delete Item---  ,\(error)")
+            }
+        }
+    }
 
 }
 
@@ -100,7 +120,7 @@ extension ViewController{
     
     
     func layout(){
-        [tableView,searchBar].forEach{
+        [searchBar].forEach{
             view.addSubview($0)
         }
        
@@ -108,12 +128,7 @@ extension ViewController{
             $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview()
         }
-        
-        tableView.snp.makeConstraints{
-            $0.top.equalTo(searchBar.snp.bottom)
-            $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
+
     }
 }
 
